@@ -1,0 +1,417 @@
+{
+  "id": "media-presenter",
+  "name": "Media & Presenter",
+  "version": "1.2.0",
+  "author": "ClipBridge",
+  "category": "presentation",
+  "icon": "slides",
+  "accent": "tertiary",
+  "summary": "Next and previous slide, Keynote and PowerPoint, player controls and a pointer.",
+  "description": "Big buttons for slides, a black-screen key, and play, pause, skip and mute for web players like YouTube (they use the player's own keys, so click into the player first). The trackpad below doubles as a pointer.",
+  "permissions": [
+    "pressKeys",
+    "mouse"
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "notes": "Player controls for web video."
+    },
+    {
+      "version": "1.1.0",
+      "notes": "Presenter widget."
+    },
+    {
+      "version": "1.0.0",
+      "notes": "First release."
+    }
+  ],
+  "page": {
+    "title": "MEDIA",
+    "icon": "play",
+    "accent": "tertiary",
+    "actions": [
+      {
+        "id": "m-help",
+        "module": "help",
+        "settings": {
+          "topic": "remote"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "id": "m-notice",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "m-n",
+            "module": "connect_notice",
+            "settings": {
+              "message": "Connect to a paired dongle to control slides and players."
+            }
+          }
+        ]
+      },
+      {
+        "id": "m-slides",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "p-prev",
+            "module": "action_button",
+            "settings": {
+              "label": "Previous",
+              "icon": "skip_previous",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "left",
+                    "m": 0
+                  }
+                ]
+              }
+            },
+            "span": 2,
+            "rows": 2
+          },
+          {
+            "id": "p-next",
+            "module": "action_button",
+            "settings": {
+              "label": "Next",
+              "icon": "skip_next",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "right",
+                    "m": 0
+                  }
+                ]
+              },
+              "filled": true
+            },
+            "span": 2,
+            "rows": 2
+          },
+          {
+            "id": "p-keynote",
+            "module": "action_button",
+            "settings": {
+              "label": "Play Keynote",
+              "icon": "play",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "p",
+                    "m": 12
+                  }
+                ]
+              }
+            },
+            "span": 2
+          },
+          {
+            "id": "p-ppt",
+            "module": "action_button",
+            "settings": {
+              "label": "Play PowerPoint",
+              "icon": "play",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "return",
+                    "m": 10
+                  }
+                ]
+              }
+            },
+            "span": 2
+          },
+          {
+            "id": "p-black",
+            "module": "action_button",
+            "settings": {
+              "label": "Black screen",
+              "icon": "page",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "b",
+                    "m": 0
+                  }
+                ]
+              },
+              "color": "neutral"
+            },
+            "span": 2
+          },
+          {
+            "id": "p-end",
+            "module": "action_button",
+            "settings": {
+              "label": "End show",
+              "icon": "undo",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "esc",
+                    "m": 0
+                  }
+                ]
+              },
+              "color": "error"
+            },
+            "span": 2
+          }
+        ]
+      },
+      {
+        "id": "m-player",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "v-back",
+            "module": "action_button",
+            "settings": {
+              "label": "Back 10 s",
+              "icon": "skip_previous",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "j",
+                    "m": 0
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "v-play",
+            "module": "action_button",
+            "settings": {
+              "label": "Play / pause",
+              "icon": "pause",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "k",
+                    "m": 0
+                  }
+                ]
+              },
+              "filled": true
+            },
+            "span": 1
+          },
+          {
+            "id": "v-fwd",
+            "module": "action_button",
+            "settings": {
+              "label": "Forward 10 s",
+              "icon": "skip_next",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "l",
+                    "m": 0
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "v-mute",
+            "module": "action_button",
+            "settings": {
+              "label": "Mute",
+              "icon": "mute",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "m",
+                    "m": 0
+                  }
+                ]
+              },
+              "color": "neutral"
+            },
+            "span": 1
+          }
+        ]
+      },
+      {
+        "id": "m-pad",
+        "type": "fill",
+        "flex": 1,
+        "block": {
+          "id": "m-pointer",
+          "module": "trackpad"
+        }
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "slides",
+      "name": "Slides",
+      "description": "Previous and next.",
+      "sizes": [
+        "2x1",
+        "4x1",
+        "2x2"
+      ],
+      "blocks": [
+        {
+          "id": "ws-prev",
+          "module": "action_button",
+          "settings": {
+            "label": "Previous",
+            "icon": "skip_previous",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "left",
+                  "m": 0
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "ws-next",
+          "module": "action_button",
+          "settings": {
+            "label": "Next",
+            "icon": "skip_next",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "right",
+                  "m": 0
+                }
+              ]
+            },
+            "filled": true
+          },
+          "span": 1
+        }
+      ]
+    },
+    {
+      "id": "player",
+      "name": "Player",
+      "description": "Back, play or pause, forward, mute.",
+      "sizes": [
+        "4x1"
+      ],
+      "blocks": [
+        {
+          "id": "wp-back",
+          "module": "action_button",
+          "settings": {
+            "label": "Back",
+            "icon": "skip_previous",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "j",
+                  "m": 0
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wp-play",
+          "module": "action_button",
+          "settings": {
+            "label": "Play",
+            "icon": "pause",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "k",
+                  "m": 0
+                }
+              ]
+            },
+            "filled": true
+          },
+          "span": 1
+        },
+        {
+          "id": "wp-fwd",
+          "module": "action_button",
+          "settings": {
+            "label": "Forward",
+            "icon": "skip_next",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "l",
+                  "m": 0
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wp-mute",
+          "module": "action_button",
+          "settings": {
+            "label": "Mute",
+            "icon": "mute",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "m",
+                  "m": 0
+                }
+              ]
+            },
+            "color": "neutral"
+          },
+          "span": 1
+        }
+      ]
+    }
+  ]
+}

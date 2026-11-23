@@ -1,0 +1,584 @@
+{
+  "id": "shortcut-deck",
+  "name": "Shortcut Deck",
+  "version": "1.0.0",
+  "author": "ClipBridge",
+  "category": "developer",
+  "icon": "deck",
+  "accent": "secondary",
+  "summary": "A button deck for VS Code and macOS: palette, terminal, find, format and more.",
+  "description": "Stream-Deck-style buttons for the shortcuts you reach for all day. Every button is a block, so hold the app's page to change, add or remove them.",
+  "permissions": [
+    "pressKeys"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "notes": "First release."
+    }
+  ],
+  "page": {
+    "title": "DECK",
+    "icon": "bolt",
+    "actions": [
+      {
+        "id": "deck-keyboard",
+        "module": "keyboard_toggle",
+        "span": 1
+      }
+    ],
+    "sections": [
+      {
+        "id": "deck-vscode",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "vs-palette",
+            "module": "action_button",
+            "settings": {
+              "label": "Commands",
+              "icon": "command",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "p",
+                    "m": 10
+                  }
+                ]
+              },
+              "filled": true
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-open",
+            "module": "action_button",
+            "settings": {
+              "label": "Quick open",
+              "icon": "search",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "p",
+                    "m": 8
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-term",
+            "module": "action_button",
+            "settings": {
+              "label": "Terminal",
+              "icon": "terminal",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "`",
+                    "m": 1
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-save",
+            "module": "action_button",
+            "settings": {
+              "label": "Save",
+              "icon": "star",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "s",
+                    "m": 8
+                  }
+                ]
+              },
+              "color": "secondary"
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-find",
+            "module": "action_button",
+            "settings": {
+              "label": "Find in files",
+              "icon": "search",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "f",
+                    "m": 10
+                  }
+                ]
+              },
+              "color": "secondary"
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-comment",
+            "module": "action_button",
+            "settings": {
+              "label": "Comment",
+              "icon": "code",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "/",
+                    "m": 8
+                  }
+                ]
+              },
+              "color": "secondary"
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-format",
+            "module": "action_button",
+            "settings": {
+              "label": "Format",
+              "icon": "text",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "f",
+                    "m": 6
+                  }
+                ]
+              },
+              "color": "secondary"
+            },
+            "span": 1
+          },
+          {
+            "id": "vs-def",
+            "module": "action_button",
+            "settings": {
+              "label": "Go to definition",
+              "icon": "link",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "f12",
+                    "m": 0
+                  }
+                ]
+              },
+              "color": "secondary"
+            },
+            "span": 1
+          }
+        ]
+      },
+      {
+        "id": "deck-mac",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "mac-spot",
+            "module": "action_button",
+            "settings": {
+              "label": "Spotlight",
+              "icon": "search",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "space",
+                    "m": 8
+                  }
+                ]
+              }
+            },
+            "span": 2
+          },
+          {
+            "id": "mac-switch",
+            "module": "action_button",
+            "settings": {
+              "label": "Switch app",
+              "icon": "window",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "tab",
+                    "m": 8
+                  }
+                ]
+              }
+            },
+            "span": 2
+          },
+          {
+            "id": "mac-shot",
+            "module": "action_button",
+            "settings": {
+              "label": "Screenshot",
+              "icon": "screenshot",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "4",
+                    "m": 10
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "mac-copy",
+            "module": "action_button",
+            "settings": {
+              "label": "Copy",
+              "icon": "copy",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "c",
+                    "m": 8
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "mac-paste",
+            "module": "action_button",
+            "settings": {
+              "label": "Paste",
+              "icon": "paste",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "v",
+                    "m": 8
+                  }
+                ]
+              }
+            },
+            "span": 1
+          },
+          {
+            "id": "mac-undo",
+            "module": "action_button",
+            "settings": {
+              "label": "Undo",
+              "icon": "undo",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "z",
+                    "m": 8
+                  }
+                ]
+              },
+              "color": "neutral"
+            },
+            "span": 1
+          }
+        ]
+      },
+      {
+        "id": "deck-keys",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "deck-bar",
+            "module": "key_bar"
+          }
+        ]
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "deck",
+      "name": "VS Code deck",
+      "description": "Eight VS Code shortcuts.",
+      "sizes": [
+        "4x2"
+      ],
+      "blocks": [
+        {
+          "id": "wvs-palette",
+          "module": "action_button",
+          "settings": {
+            "label": "Commands",
+            "icon": "command",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "p",
+                  "m": 10
+                }
+              ]
+            },
+            "filled": true
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-open",
+          "module": "action_button",
+          "settings": {
+            "label": "Quick open",
+            "icon": "search",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "p",
+                  "m": 8
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-term",
+          "module": "action_button",
+          "settings": {
+            "label": "Terminal",
+            "icon": "terminal",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "`",
+                  "m": 1
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-save",
+          "module": "action_button",
+          "settings": {
+            "label": "Save",
+            "icon": "star",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "s",
+                  "m": 8
+                }
+              ]
+            },
+            "color": "secondary"
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-find",
+          "module": "action_button",
+          "settings": {
+            "label": "Find in files",
+            "icon": "search",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "f",
+                  "m": 10
+                }
+              ]
+            },
+            "color": "secondary"
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-comment",
+          "module": "action_button",
+          "settings": {
+            "label": "Comment",
+            "icon": "code",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "/",
+                  "m": 8
+                }
+              ]
+            },
+            "color": "secondary"
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-format",
+          "module": "action_button",
+          "settings": {
+            "label": "Format",
+            "icon": "text",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "f",
+                  "m": 6
+                }
+              ]
+            },
+            "color": "secondary"
+          },
+          "span": 1
+        },
+        {
+          "id": "wvs-def",
+          "module": "action_button",
+          "settings": {
+            "label": "Go to definition",
+            "icon": "link",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "f12",
+                  "m": 0
+                }
+              ]
+            },
+            "color": "secondary"
+          },
+          "span": 1
+        }
+      ]
+    },
+    {
+      "id": "mac",
+      "name": "Mac basics",
+      "description": "Spotlight, switch app, screenshot, copy.",
+      "sizes": [
+        "4x1"
+      ],
+      "blocks": [
+        {
+          "id": "wm-spot",
+          "module": "action_button",
+          "settings": {
+            "label": "Spotlight",
+            "icon": "search",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "space",
+                  "m": 8
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wm-switch",
+          "module": "action_button",
+          "settings": {
+            "label": "Switch",
+            "icon": "window",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "tab",
+                  "m": 8
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wm-shot",
+          "module": "action_button",
+          "settings": {
+            "label": "Shot",
+            "icon": "screenshot",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "4",
+                  "m": 10
+                }
+              ]
+            }
+          },
+          "span": 1
+        },
+        {
+          "id": "wm-copy",
+          "module": "action_button",
+          "settings": {
+            "label": "Copy",
+            "icon": "copy",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "c",
+                  "m": 8
+                }
+              ]
+            }
+          },
+          "span": 1
+        }
+      ]
+    }
+  ]
+}

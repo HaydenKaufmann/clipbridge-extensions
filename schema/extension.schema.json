@@ -1,0 +1,655 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HaydenKaufmann/clipbridge-extensions/extension.schema.json",
+  "title": "ClipBridge extension",
+  "description": "An app for the ClipBridge home screen: a page and widgets made of the app's blocks. See docs/extensions.md.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$",
+      "description": "Unique, lower case; also the app and page id."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+){0,3}$"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "One line for the store list."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "category": {
+      "enum": [
+        "productivity",
+        "media",
+        "developer",
+        "presentation",
+        "utilities"
+      ]
+    },
+    "icon": {
+      "enum": [
+        "blank",
+        "bolt",
+        "bookmark",
+        "clipboard",
+        "code",
+        "command",
+        "copy",
+        "deck",
+        "dongle",
+        "download",
+        "duck",
+        "edit",
+        "gear",
+        "history",
+        "home",
+        "keyboard",
+        "library",
+        "link",
+        "lock",
+        "macro",
+        "mail",
+        "mouse",
+        "mute",
+        "page",
+        "paste",
+        "pause",
+        "play",
+        "pointer",
+        "redo",
+        "remote",
+        "screenshot",
+        "search",
+        "send",
+        "settings",
+        "skip_next",
+        "skip_previous",
+        "slides",
+        "slideshow",
+        "star",
+        "store",
+        "terminal",
+        "text",
+        "trackpad",
+        "undo",
+        "volume_down",
+        "volume_up",
+        "window"
+      ],
+      "description": "A pixel icon or a page icon."
+    },
+    "accent": {
+      "enum": [
+        "primary",
+        "secondary",
+        "tertiary",
+        "error",
+        "neutral"
+      ]
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "typeText",
+          "pressKeys",
+          "mouse",
+          "runDucky",
+          "readClipboard",
+          "runScript"
+        ]
+      }
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "version",
+          "notes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "page": {
+      "$ref": "#/$defs/page"
+    },
+    "widgets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/widget"
+      },
+      "maxItems": 8
+    },
+    "script": {
+      "type": "string",
+      "maxLength": 20000,
+      "description": "JavaScript; not run yet."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "version",
+    "author",
+    "summary",
+    "page"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "page": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24
+        },
+        "heading": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "icon": {
+          "enum": [
+            "bolt",
+            "clipboard",
+            "code",
+            "command",
+            "copy",
+            "download",
+            "edit",
+            "home",
+            "keyboard",
+            "library",
+            "link",
+            "lock",
+            "macro",
+            "mail",
+            "mouse",
+            "mute",
+            "page",
+            "paste",
+            "pause",
+            "play",
+            "redo",
+            "remote",
+            "screenshot",
+            "search",
+            "send",
+            "settings",
+            "skip_next",
+            "skip_previous",
+            "slideshow",
+            "star",
+            "terminal",
+            "text",
+            "trackpad",
+            "undo",
+            "volume_down",
+            "volume_up",
+            "window"
+          ]
+        },
+        "header": {
+          "type": "boolean"
+        },
+        "mark": {
+          "type": "boolean"
+        },
+        "background": {
+          "enum": [
+            "plain",
+            "grid"
+          ]
+        },
+        "accent": {
+          "enum": [
+            "primary",
+            "secondary",
+            "tertiary",
+            "error",
+            "neutral"
+          ]
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          },
+          "maxItems": 4
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/section"
+          },
+          "maxItems": 12
+        }
+      },
+      "required": [
+        "title",
+        "sections"
+      ],
+      "additionalProperties": false
+    },
+    "section": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,40}$"
+            },
+            "type": {
+              "const": "grid"
+            },
+            "dock": {
+              "type": "boolean"
+            },
+            "blocks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/block"
+              },
+              "maxItems": 24
+            }
+          },
+          "required": [
+            "id",
+            "type",
+            "blocks"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,40}$"
+            },
+            "type": {
+              "const": "fill"
+            },
+            "flex": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "block": {
+              "$ref": "#/$defs/block"
+            }
+          },
+          "required": [
+            "id",
+            "type",
+            "block"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "block": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,40}$"
+        },
+        "module": {
+          "enum": [
+            "action_button",
+            "compose",
+            "connect_notice",
+            "fetch_clipboard",
+            "help",
+            "history_list",
+            "history_search",
+            "key_bar",
+            "keyboard_pad",
+            "keyboard_toggle",
+            "library_chips",
+            "library_import",
+            "library_list",
+            "library_new",
+            "library_search",
+            "mouse_buttons",
+            "send_clipboard",
+            "status_card",
+            "trackpad",
+            "transfer_progress"
+          ]
+        },
+        "span": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "settings": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "icon": {
+              "enum": [
+                "bolt",
+                "clipboard",
+                "code",
+                "command",
+                "copy",
+                "download",
+                "edit",
+                "home",
+                "keyboard",
+                "library",
+                "link",
+                "lock",
+                "macro",
+                "mail",
+                "mouse",
+                "mute",
+                "page",
+                "paste",
+                "pause",
+                "play",
+                "redo",
+                "remote",
+                "screenshot",
+                "search",
+                "send",
+                "settings",
+                "skip_next",
+                "skip_previous",
+                "slideshow",
+                "star",
+                "terminal",
+                "text",
+                "trackpad",
+                "undo",
+                "volume_down",
+                "volume_up",
+                "window"
+              ]
+            },
+            "color": {
+              "enum": [
+                "primary",
+                "secondary",
+                "tertiary",
+                "error",
+                "neutral"
+              ]
+            },
+            "filled": {
+              "type": "boolean"
+            },
+            "action": {
+              "$ref": "#/$defs/action"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "module"
+      ],
+      "additionalProperties": false
+    },
+    "action": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "steps"
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/step"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            }
+          },
+          "required": [
+            "type",
+            "steps"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "send_clipboard"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "fetch_clipboard"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "compose"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "open_page"
+            },
+            "page": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "type",
+            "page"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "step": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "t": {
+              "const": "text"
+            },
+            "v": {
+              "type": "string",
+              "maxLength": 4000
+            }
+          },
+          "required": [
+            "t",
+            "v"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "t": {
+              "const": "key"
+            },
+            "k": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "return",
+                    "esc",
+                    "delete",
+                    "tab",
+                    "space",
+                    "fwd-delete",
+                    "left",
+                    "right",
+                    "up",
+                    "down",
+                    "home",
+                    "end",
+                    "page-up",
+                    "page-down",
+                    "f1",
+                    "f2",
+                    "f3",
+                    "f4",
+                    "f5",
+                    "f6",
+                    "f7",
+                    "f8",
+                    "f9",
+                    "f10",
+                    "f11",
+                    "f12"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[ -~]$",
+                  "description": "One printable ASCII character."
+                }
+              ]
+            },
+            "m": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 15,
+              "description": "Modifiers: ctrl 1, shift 2, alt 4, cmd/win 8."
+            }
+          },
+          "required": [
+            "t",
+            "k"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "t": {
+              "const": "wait"
+            },
+            "ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            }
+          },
+          "required": [
+            "t",
+            "ms"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "widget": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,40}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "sizes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "2x1",
+              "3x1",
+              "4x1",
+              "2x2",
+              "4x2",
+              "4x4"
+            ]
+          },
+          "minItems": 1
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          },
+          "minItems": 1,
+          "maxItems": 16
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "sizes",
+        "blocks"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

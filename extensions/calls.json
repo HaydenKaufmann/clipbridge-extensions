@@ -1,0 +1,197 @@
+{
+  "id": "calls",
+  "name": "Call Controls",
+  "version": "1.0.0",
+  "author": "ClipBridge",
+  "category": "productivity",
+  "icon": "mail",
+  "accent": "secondary",
+  "summary": "Mute, camera, share and leave for Zoom on a Mac.",
+  "description": "Zoom's own shortcuts on big buttons, so you can mute without hunting for the window. Zoom has to be the app in front.",
+  "permissions": [
+    "pressKeys"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "notes": "First release."
+    }
+  ],
+  "page": {
+    "title": "CALLS",
+    "icon": "mail",
+    "accent": "secondary",
+    "sections": [
+      {
+        "id": "z-notice",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "z-n",
+            "module": "connect_notice",
+            "settings": {
+              "message": "Connect to a paired dongle to control your call."
+            }
+          }
+        ]
+      },
+      {
+        "id": "z-main",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "z-mute",
+            "module": "action_button",
+            "settings": {
+              "label": "Mute / unmute",
+              "icon": "mute",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "a",
+                    "m": 10
+                  }
+                ]
+              },
+              "filled": true
+            },
+            "span": 2,
+            "rows": 2
+          },
+          {
+            "id": "z-video",
+            "module": "action_button",
+            "settings": {
+              "label": "Camera on / off",
+              "icon": "screenshot",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "v",
+                    "m": 10
+                  }
+                ]
+              }
+            },
+            "span": 2,
+            "rows": 2
+          },
+          {
+            "id": "z-share",
+            "module": "action_button",
+            "settings": {
+              "label": "Share screen",
+              "icon": "window",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "s",
+                    "m": 10
+                  }
+                ]
+              }
+            },
+            "span": 2
+          },
+          {
+            "id": "z-hand",
+            "module": "action_button",
+            "settings": {
+              "label": "Raise hand",
+              "icon": "star",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "y",
+                    "m": 4
+                  }
+                ]
+              }
+            },
+            "span": 2
+          },
+          {
+            "id": "z-leave",
+            "module": "action_button",
+            "settings": {
+              "label": "Leave",
+              "icon": "undo",
+              "action": {
+                "type": "steps",
+                "steps": [
+                  {
+                    "t": "key",
+                    "k": "w",
+                    "m": 8
+                  }
+                ]
+              },
+              "color": "error"
+            },
+            "span": 4
+          }
+        ]
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "mute",
+      "name": "Mute",
+      "description": "Mute and camera.",
+      "sizes": [
+        "2x1",
+        "4x1"
+      ],
+      "blocks": [
+        {
+          "id": "wz-mute",
+          "module": "action_button",
+          "settings": {
+            "label": "Mute",
+            "icon": "mute",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "a",
+                  "m": 10
+                }
+              ]
+            },
+            "filled": true
+          },
+          "span": 1
+        },
+        {
+          "id": "wz-video",
+          "module": "action_button",
+          "settings": {
+            "label": "Camera",
+            "icon": "screenshot",
+            "action": {
+              "type": "steps",
+              "steps": [
+                {
+                  "t": "key",
+                  "k": "v",
+                  "m": 10
+                }
+              ]
+            }
+          },
+          "span": 1
+        }
+      ]
+    }
+  ]
+}

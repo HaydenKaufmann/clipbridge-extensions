@@ -1,0 +1,58 @@
+name: Catalogue
+
+# Pull requests: check every extension against the schema and the rules in
+# tools/build.py. Pushes to main: check, build and sign the catalogue, and
+# publish it to the `dist` branch, where the app downloads it from:
+# https://raw.githubusercontent.com/HaydenKaufmann/clipbridge-extensions/dist/catalogue.json
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalogue-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema==4.23.0 cryptography==43.0.1
+      - run: python3 tools/build.py --check
+
+  publish:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    # The signing key is only available to this job, in this environment.
+    environment: catalogue-signing
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema==4.23.0 cryptography==43.0.1
+      - name: Build and sign
+        env:
+          CATALOGUE_SIGNING_KEY: ${{ secrets.CATALOGUE_SIGNING_KEY }}
+        run: python3 tools/build.py --out dist/catalogue.json
+      - name: Publish to the dist branch
+        run: |
+          cd dist
+          git init -q -b dist
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add catalogue.json
+          git commit -q -m "Catalogue from ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" dist

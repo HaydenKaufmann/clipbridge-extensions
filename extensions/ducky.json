@@ -1,0 +1,89 @@
+{
+  "id": "ducky",
+  "name": "DuckyScript Runner",
+  "version": "1.0.0",
+  "author": "ClipBridge",
+  "category": "developer",
+  "icon": "duck",
+  "accent": "tertiary",
+  "summary": "Import DuckyScript payloads and run them as macros.",
+  "description": "Opens .txt DuckyScript files (STRING, DELAY, GUI, CTRL, ALT and friends) and turns them into library macros you can review before running. Only run payloads you trust: they type and press keys on your computer exactly as written.",
+  "permissions": [
+    "runDucky",
+    "typeText",
+    "pressKeys"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "notes": "First release."
+    }
+  ],
+  "page": {
+    "title": "DUCKY",
+    "heading": "DUCKYSCRIPT",
+    "icon": "macro",
+    "actions": [
+      {
+        "id": "ducky-import",
+        "module": "library_import"
+      },
+      {
+        "id": "ducky-help",
+        "module": "help",
+        "settings": {
+          "topic": "library"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "id": "ducky-top",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "ducky-notice",
+            "module": "connect_notice",
+            "settings": {
+              "message": "Connect to a paired dongle to run payloads."
+            }
+          },
+          {
+            "id": "ducky-search",
+            "module": "library_search"
+          },
+          {
+            "id": "ducky-chips",
+            "module": "library_chips"
+          }
+        ]
+      },
+      {
+        "id": "ducky-list",
+        "type": "fill",
+        "flex": 1,
+        "block": {
+          "id": "ducky-items",
+          "module": "library_list"
+        }
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "payloads",
+      "name": "Payloads",
+      "description": "Your macros, ready to run.",
+      "sizes": [
+        "4x2",
+        "4x4"
+      ],
+      "blocks": [
+        {
+          "id": "w-ducky",
+          "module": "library_list"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "id": "library",
+  "name": "Library & Macros",
+  "version": "1.1.0",
+  "author": "ClipBridge",
+  "category": "productivity",
+  "icon": "bookmark",
+  "accent": "primary",
+  "summary": "Saved snippets, shortcuts and multi-step macros, sorted into categories.",
+  "description": "Keep the text you type over and over, the shortcuts you can never remember, and macros that chain keys, text and waits. Lock sensitive categories behind Face ID. Tap any item to send it to your computer.",
+  "permissions": [
+    "typeText",
+    "pressKeys"
+  ],
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "notes": "Library widget for the home screen."
+    },
+    {
+      "version": "1.0.0",
+      "notes": "First release."
+    }
+  ],
+  "page": {
+    "title": "LIBRARY",
+    "icon": "library",
+    "background": "grid",
+    "actions": [
+      {
+        "id": "lib-new",
+        "module": "library_new"
+      },
+      {
+        "id": "lib-help",
+        "module": "help",
+        "settings": {
+          "topic": "library"
+        }
+      }
+    ],
+    "sections": [
+      {
+        "id": "lib-top",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "lib-search",
+            "module": "library_search"
+          },
+          {
+            "id": "lib-chips",
+            "module": "library_chips"
+          }
+        ]
+      },
+      {
+        "id": "lib-items",
+        "type": "fill",
+        "flex": 1,
+        "block": {
+          "id": "lib-list",
+          "module": "library_list"
+        }
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "items",
+      "name": "Library",
+      "description": "Your saved items; tap to send.",
+      "sizes": [
+        "4x2",
+        "4x4"
+      ],
+      "blocks": [
+        {
+          "id": "w-lib",
+          "module": "library_list"
+        }
+      ]
+    }
+  ]
+}
