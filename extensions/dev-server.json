@@ -1,0 +1,197 @@
+{
+  "id": "dev-server",
+  "name": "Dev Server",
+  "version": "1.0.0",
+  "author": "ClipBridge",
+  "category": "developer",
+  "icon": "terminal",
+  "accent": "secondary",
+  "summary": "Open a terminal and run npm in your projects: install, start, build, stop.",
+  "description": "Save the folders of your projects once, then start the dev server, install packages, build or run any npm script with one tap. It types the commands into the terminal on your computer, so put the terminal in front first, or tap Terminal. Your project list stays on this phone.",
+  "permissions": [
+    "typeText",
+    "pressKeys"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "notes": "First release, and the first extension with a script."
+    }
+  ],
+  "page": {
+    "title": "DEV SERVER",
+    "sections": [
+      {
+        "id": "server",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "start",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Start dev",
+              "icon": "play",
+              "action": {
+                "type": "script",
+                "call": "npm",
+                "args": [
+                  "run dev"
+                ]
+              },
+              "filled": true
+            }
+          },
+          {
+            "id": "stop",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Stop",
+              "icon": "pause",
+              "action": {
+                "type": "script",
+                "call": "stop"
+              }
+            }
+          },
+          {
+            "id": "install",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Install",
+              "icon": "download",
+              "action": {
+                "type": "script",
+                "call": "npm",
+                "args": [
+                  "install"
+                ]
+              }
+            }
+          },
+          {
+            "id": "build",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Build",
+              "icon": "bolt",
+              "action": {
+                "type": "script",
+                "call": "npm",
+                "args": [
+                  "run build"
+                ]
+              }
+            }
+          },
+          {
+            "id": "run",
+            "module": "action_button",
+            "span": 4,
+            "settings": {
+              "label": "Run script…",
+              "icon": "code",
+              "action": {
+                "type": "script",
+                "call": "runAsk"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "projects",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "terminal",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Terminal",
+              "icon": "terminal",
+              "action": {
+                "type": "script",
+                "call": "openTerminal"
+              }
+            }
+          },
+          {
+            "id": "project",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Project",
+              "icon": "library",
+              "action": {
+                "type": "script",
+                "call": "project"
+              }
+            }
+          },
+          {
+            "id": "forget",
+            "module": "action_button",
+            "span": 4,
+            "settings": {
+              "label": "Forget a project",
+              "icon": "undo",
+              "action": {
+                "type": "script",
+                "call": "forgetProject"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "server",
+      "name": "Server",
+      "description": "Start and stop the dev server.",
+      "sizes": [
+        "2x1",
+        "4x1",
+        "2x2"
+      ],
+      "blocks": [
+        {
+          "id": "w-start",
+          "module": "action_button",
+          "span": 1,
+          "settings": {
+            "label": "Start",
+            "icon": "play",
+            "action": {
+              "type": "script",
+              "call": "npm",
+              "args": [
+                "run dev"
+              ]
+            },
+            "filled": true
+          }
+        },
+        {
+          "id": "w-stop",
+          "module": "action_button",
+          "span": 1,
+          "settings": {
+            "label": "Stop",
+            "icon": "pause",
+            "action": {
+              "type": "script",
+              "call": "stop"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "script": "// Dev Server: runs npm in a project folder on your computer.\n// Your project folders and computer type are kept on the phone (cb.storage).\n\nconst ADD = '+ Add a project';\n\nasync function projects() {\n  return (await cb.storage.get('projects')) || [];\n}\n\n// The project to use: the one picked last, the only one, or ask.\nasync function current() {\n  const list = await projects();\n  const chosen = await cb.storage.get('current');\n  if (chosen && list.includes(chosen)) return chosen;\n  if (list.length === 1) return list[0];\n  return pickProject();\n}\n\nasync function addProject() {\n  const answer = await cb.ask('Project folder on your computer', { placeholder: '~/code/my-app' });\n  const dir = (answer || '').trim();\n  if (!dir) return null;\n  const list = await projects();\n  if (!list.includes(dir)) list.push(dir);\n  await cb.storage.set('projects', list);\n  await cb.storage.set('current', dir);\n  return dir;\n}\n\nasync function pickProject() {\n  const list = await projects();\n  if (list.length === 0) return addProject();\n  const choice = await cb.choose('Which project?', [...list, ADD]);\n  if (choice === null) return null;\n  if (choice === ADD) return addProject();\n  await cb.storage.set('current', choice);\n  return choice;\n}\n\nasync function project() {\n  const dir = await pickProject();\n  return dir ? 'Project: ' + dir : null;\n}\n\nasync function forgetProject() {\n  const list = await projects();\n  if (list.length === 0) return 'No projects saved.';\n  const dir = await cb.choose('Forget which project?', list);\n  if (dir === null) return null;\n  if (!(await cb.confirm('Forget ' + dir + '? Nothing on your computer changes.'))) return null;\n  await cb.storage.set('projects', list.filter((p) => p !== dir));\n  if ((await cb.storage.get('current')) === dir) await cb.storage.remove('current');\n  return 'Forgot ' + dir;\n}\n\nasync function computer() {\n  let os = await cb.storage.get('os');\n  if (!os) {\n    os = await cb.choose('What does your computer run?', ['macOS', 'Windows', 'Linux']);\n    if (os) await cb.storage.set('os', os);\n  }\n  return os;\n}\n\nasync function openTerminal() {\n  const os = await computer();\n  if (os === 'macOS') {\n    await cb.keys('cmd+space');\n    await cb.wait(500);\n    await cb.type('Terminal');\n    await cb.wait(300);\n    await cb.keys('return');\n  } else if (os === 'Windows') {\n    await cb.keys('win+r');\n    await cb.wait(500);\n    await cb.type('cmd');\n    await cb.keys('return');\n  } else if (os === 'Linux') {\n    await cb.keys('ctrl+alt+t');\n  } else {\n    return null;\n  }\n  await cb.wait(1200);\n  return 'Opened a terminal';\n}\n\n// Quotes a folder for the shell; a leading ~/ stays outside the quotes so it expands.\nfunction quote(dir) {\n  if (dir.startsWith('~/')) return '~/' + JSON.stringify(dir.slice(2));\n  return JSON.stringify(dir);\n}\n\n// Types \"cd <project> && npm <command>\" into the focused terminal.\nasync function npm(command) {\n  const dir = await current();\n  if (!dir) return null;\n  await cb.type('cd ' + quote(dir) + ' && npm ' + command);\n  await cb.keys('return');\n  return 'npm ' + command + ' · ' + dir;\n}\n\nasync function runAsk() {\n  const last = (await cb.storage.get('lastScript')) || 'test';\n  const answer = await cb.ask('npm run …', { initial: last, placeholder: 'test' });\n  const name = (answer || '').trim();\n  if (!name) return null;\n  await cb.storage.set('lastScript', name);\n  return npm('run ' + name);\n}\n\nasync function stop() {\n  await cb.keys('ctrl+c');\n  return 'Sent Ctrl-C';\n}\n"
+}

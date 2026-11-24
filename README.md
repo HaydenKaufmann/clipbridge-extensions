@@ -28,6 +28,22 @@ it can do on the user's computer (type text, press keys, move the mouse, run
 DuckyScript, read the clipboard), worked out from its blocks as well as its
 `permissions`. Pull requests are reviewed for what the buttons actually send.
 
+### Scripts
+
+For more than fixed steps, an extension can carry JavaScript in `script`, and
+buttons call its functions with `{"type": "script", "call": "name", "args": [...]}`.
+Scripts run in a sandbox with no network, and talk to the app only through
+`cb`: `cb.type`, `cb.keys`, `cb.wait`, `cb.mouse.*`, `cb.ducky`,
+`cb.storage.*`, and the prompts `cb.ask`, `cb.choose`, `cb.confirm` and
+`cb.notify`. Every call is checked against the extension's permissions.
+[`extensions/dev-server.json`](extensions/dev-server.json) is a worked
+example, and the app's
+[docs/extensions.md](https://github.com/HaydenKaufmann/clipbridge/blob/main/docs/extensions.md#scripts)
+has the whole API.
+
+The check also makes sure every function a button calls is defined, and,
+when `node` is installed, that the script parses.
+
 ## How the app gets it
 
 Every push to `main` runs [the catalogue workflow](.github/workflows/catalogue.yml):

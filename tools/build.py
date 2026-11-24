@@ -13,7 +13,8 @@ where the index is {"format": 1, "sequence": <unix seconds>, "generated": "...",
 "extensions": [...]}. The app checks the signature with the public key built
 into it, and refuses a sequence lower than one it has already seen.
 
-Needs: pip install jsonschema cryptography
+Needs: pip install jsonschema cryptography. Scripts' syntax is checked with
+node when it's installed (it is on GitHub's runners).
 """
 
 import argparse
@@ -22,7 +23,11 @@ import datetime
 import json
 import os
 import pathlib
+import re
+import shutil
+import subprocess
 import sys
+import tempfile
 import time
 
 import jsonschema
@@ -43,6 +48,52 @@ def page_block_ids(page):
     for s in page["sections"]:
         ids += block_ids(s["blocks"]) if s["type"] == "grid" else [s["block"]["id"]]
     return ids
+
+
+def all_blocks(ext):
+    page = ext["page"]
+    blocks = list(page.get("actions", []))
+    for s in page["sections"]:
+        blocks += s["blocks"] if s["type"] == "grid" else [s["block"]]
+    for w in ext.get("widgets", []):
+        blocks += w["blocks"]
+    return blocks
+
+
+def script_calls(ext):
+    """The functions the extension's buttons call."""
+    calls = set()
+    for b in all_blocks(ext):
+        action = b.get("settings", {}).get("action")
+        if b["module"] == "action_button" and isinstance(action, dict) and action.get("type") == "script":
+            calls.add(action["call"])
+    return calls
+
+
+def defines(script, name):
+    n = re.escape(name)
+    return re.search(rf"(\bfunction\s*\*?\s*{n}\s*\(|\b(const|let|var)\s+{n}\s*=)", script) is not None
+
+
+def syntax_problems(script):
+    """JavaScript syntax errors, checked with node if it's installed."""
+    node = shutil.which("node")
+    if not node:
+        return []
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as f:
+        f.write(script)
+    try:
+        out = subprocess.run([node, "--check", f.name], capture_output=True, text=True, timeout=30)
+    finally:
+        os.unlink(f.name)
+    if out.returncode == 0:
+        return []
+    lines = [l for l in out.stderr.splitlines() if l.strip()]
+    # node names the file by its real path, which may differ from f.name (/private/var vs /var).
+    where = next((m for l in lines if (m := re.search(r"\.js:(\d+)$", l))), None)
+    line = where.group(1) if where else "?"
+    error = next((l for l in lines if "Error" in l), lines[-1] if lines else "syntax error")
+    return [f"script line {line}: {error}"]
 
 
 def explain(error):
@@ -89,12 +140,11 @@ def check(path, schema_validator):
         problems.append(f'file name should be {ext["id"]}.json')
     if ext["id"] in BUILT_IN:
         problems.append(f'id "{ext["id"]}" is a built-in app')
-    ids = page_block_ids(ext["page"])
-    section_ids = [s["id"] for s in ext["page"]["sections"]]
-    for name, values in [("block", ids), ("section", section_ids)]:
-        dupes = {v for v in values if values.count(v) > 1}
-        if dupes:
-            problems.append(f"page: duplicate {name} ids {sorted(dupes)}")
+    # The app checks section and block ids together (layout_check.dart).
+    ids = page_block_ids(ext["page"]) + [s["id"] for s in ext["page"]["sections"]]
+    dupes = {v for v in ids if ids.count(v) > 1}
+    if dupes:
+        problems.append(f"page: duplicate section or block ids {sorted(dupes)}")
     widget_ids = [w["id"] for w in ext.get("widgets", [])]
     if len(set(widget_ids)) != len(widget_ids):
         problems.append("duplicate widget ids")
@@ -102,6 +152,14 @@ def check(path, schema_validator):
         wb = block_ids(w["blocks"])
         if len(set(wb)) != len(wb):
             problems.append(f'widget {w["id"]}: duplicate block ids')
+    calls, script = script_calls(ext), ext.get("script")
+    if calls and not script:
+        problems.append(f"buttons call {sorted(calls)} but there's no script")
+    if script:
+        for c in sorted(calls):
+            if not defines(script, c):
+                problems.append(f'script: no function "{c}", which a button calls')
+        problems += syntax_problems(script)
     return problems
 
 

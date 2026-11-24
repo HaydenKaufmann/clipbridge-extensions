@@ -149,8 +149,8 @@
     },
     "script": {
       "type": "string",
-      "maxLength": 20000,
-      "description": "JavaScript; not run yet."
+      "maxLength": 65536,
+      "description": "JavaScript run in a sandbox when a \"script\" button is tapped; see docs/extensions.md for the cb API."
     }
   },
   "required": [
@@ -485,6 +485,29 @@
           },
           "required": [
             "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "script"
+            },
+            "call": {
+              "type": "string",
+              "pattern": "^[A-Za-z_$][A-Za-z0-9_$]{0,39}$",
+              "description": "A function in the extension's script."
+            },
+            "args": {
+              "type": "array",
+              "maxItems": 8,
+              "description": "JSON values passed to the function."
+            }
+          },
+          "required": [
+            "type",
+            "call"
           ],
           "additionalProperties": false
         },
