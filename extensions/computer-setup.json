@@ -7,7 +7,7 @@
   "icon": "link",
   "accent": "secondary",
   "summary": "Install the ClipBridge agent on your computer and check it's running.",
-  "description": "The agent lets your phone set the computer's clipboard directly (any text, images, no typing) and fetch it back. Tap Install agent and the dongle opens a terminal on your computer and types the installer for you: it downloads the agent from GitHub, checks it, and sets it to start at login. The status shows whether the agent is running; tap it, or Test, to check it answers.",
+  "description": "The agent lets your phone set the computer's clipboard directly (any text, images, no typing) and fetch it back. Tap Install and the dongle opens a terminal on your computer and types the installer for you: it downloads the agent from GitHub, checks it, and sets it to start at login. The status shows whether the agent is running; tap it, or Test, to check it answers.",
   "permissions": [
     "typeText",
     "pressKeys"
@@ -41,7 +41,7 @@
             "module": "action_button",
             "span": 2,
             "settings": {
-              "label": "Install agent",
+              "label": "Install",
               "icon": "download",
               "filled": true,
               "action": {
