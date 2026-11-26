@@ -48,6 +48,7 @@
         "blank",
         "bolt",
         "bookmark",
+        "chat",
         "clipboard",
         "code",
         "command",
@@ -326,6 +327,7 @@
         "module": {
           "enum": [
             "action_button",
+            "agent_status",
             "compose",
             "connect_notice",
             "fetch_clipboard",

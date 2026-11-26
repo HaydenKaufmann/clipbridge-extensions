@@ -1,0 +1,115 @@
+{
+  "id": "computer-setup",
+  "name": "Computer Setup",
+  "version": "1.0.0",
+  "author": "ClipBridge",
+  "category": "utilities",
+  "icon": "link",
+  "accent": "secondary",
+  "summary": "Install the ClipBridge agent on your computer and check it's running.",
+  "description": "The agent lets your phone set the computer's clipboard directly (any text, images, no typing) and fetch it back. Tap Install agent and the dongle opens a terminal on your computer and types the installer for you: it downloads the agent from GitHub, checks it, and sets it to start at login. The status shows whether the agent is running; tap it, or Test, to check it answers.",
+  "permissions": [
+    "typeText",
+    "pressKeys"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "notes": "First release."
+    }
+  ],
+  "page": {
+    "title": "COMPUTER SETUP",
+    "sections": [
+      {
+        "id": "status",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "agent",
+            "module": "agent_status",
+            "span": 4
+          }
+        ]
+      },
+      {
+        "id": "actions",
+        "type": "grid",
+        "blocks": [
+          {
+            "id": "install",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Install agent",
+              "icon": "download",
+              "filled": true,
+              "action": {
+                "type": "script",
+                "call": "installAgent"
+              }
+            }
+          },
+          {
+            "id": "test",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Test",
+              "icon": "bolt",
+              "action": {
+                "type": "script",
+                "call": "testAgent"
+              }
+            }
+          },
+          {
+            "id": "computer",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Computer",
+              "icon": "settings",
+              "action": {
+                "type": "script",
+                "call": "changeComputer"
+              }
+            }
+          },
+          {
+            "id": "uninstall",
+            "module": "action_button",
+            "span": 2,
+            "settings": {
+              "label": "Uninstall",
+              "icon": "undo",
+              "action": {
+                "type": "script",
+                "call": "uninstallAgent"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "widgets": [
+    {
+      "id": "agent",
+      "name": "Agent",
+      "description": "Whether the agent is running; tap to test it.",
+      "sizes": [
+        "2x1",
+        "4x1"
+      ],
+      "blocks": [
+        {
+          "id": "w-agent",
+          "module": "agent_status",
+          "span": 4
+        }
+      ]
+    }
+  ],
+  "script": "// Computer Setup: installs the ClipBridge agent on the computer your dongle is\n// plugged into, and checks it's running. The computer type is kept on the phone.\n\nconst RAW = 'https://raw.githubusercontent.com/HaydenKaufmann/clipbridge-agent/main/';\nconst INSTALL = {\n  macOS: 'curl -fsSL ' + RAW + 'install.sh | sh',\n  Linux: 'curl -fsSL ' + RAW + 'install.sh | sh',\n  Windows: 'irm ' + RAW + 'install.ps1 | iex',\n};\nconst UNINSTALL = {\n  macOS: '~/.local/bin/clipbridge-agent uninstall',\n  Linux: '~/.local/bin/clipbridge-agent uninstall',\n  Windows: '& \"$env:LOCALAPPDATA\\\\ClipBridge\\\\clipbridge-agent.exe\" uninstall',\n};\nconst NAMES = { macos: 'macOS', windows: 'Windows', linux: 'Linux' };\n\n// The computer's OS: what the agent said last, what the user chose, or ask.\nasync function computer() {\n  let os = await cb.storage.get('os');\n  if (!os) {\n    os = await cb.choose('What does your computer run?', ['macOS', 'Windows', 'Linux']);\n    if (os) await cb.storage.set('os', os);\n  }\n  return os;\n}\n\nasync function changeComputer() {\n  await cb.storage.remove('os');\n  const os = await computer();\n  return os ? 'Computer: ' + os : null;\n}\n\n// Opens a terminal the installer can run in: Terminal, PowerShell, or the\n// desktop's terminal on Linux.\nasync function openTerminal(os) {\n  if (os === 'macOS') {\n    await cb.keys('cmd+space');\n    await cb.wait(600);\n    await cb.type('Terminal');\n    await cb.wait(400);\n    await cb.keys('return');\n  } else if (os === 'Windows') {\n    await cb.keys('win+r');\n    await cb.wait(600);\n    await cb.type('powershell');\n    await cb.keys('return');\n  } else {\n    await cb.keys('ctrl+alt+t');\n  }\n  await cb.wait(2000);\n}\n\nasync function runInTerminal(os, line, what) {\n  const ok = await cb.confirm(\n    'This opens a terminal on your ' + os + ' computer and types:\\n\\n' + line +\n      '\\n\\n' + what + ' Have the computer unlocked and in front of you.',\n  );\n  if (!ok) return false;\n  await openTerminal(os);\n  await cb.type(line);\n  await cb.keys('return');\n  return true;\n}\n\nasync function installAgent() {\n  const status = await cb.agent.status();\n  if (!status.connected) return 'Connect to your dongle first.';\n  const os = await computer();\n  if (!os) return null;\n  const typed = await runInTerminal(\n    os,\n    INSTALL[os],\n    'It downloads the ClipBridge agent from GitHub, checks it, and sets it to start at login.',\n  );\n  if (!typed) return null;\n  cb.notify('Installing… watch the terminal.');\n  // The dongle switches to agent mode a couple of seconds after it starts.\n  for (let i = 0; i < 15; i++) {\n    await cb.wait(2000);\n    if ((await cb.agent.status()).agent) return 'The agent is installed and running.';\n  }\n  return 'The agent isn\\'t running yet. Check the terminal for a message.';\n}\n\nasync function uninstallAgent() {\n  const os = await computer();\n  if (!os) return null;\n  const typed = await runInTerminal(\n    os,\n    UNINSTALL[os],\n    'It stops the agent and stops it starting at login.',\n  );\n  return typed ? 'Uninstalling… the dongle goes back to typing in a few seconds.' : null;\n}\n\nasync function testAgent() {\n  const status = await cb.agent.status();\n  if (!status.connected) return 'Connect to your dongle first.';\n  try {\n    const p = await cb.agent.ping();\n    if (p.os && NAMES[p.os]) await cb.storage.set('os', NAMES[p.os]);\n    return 'The agent answered in ' + p.ms + ' ms' +\n      (p.version ? ': version ' + p.version : '') +\n      (p.os ? ' on ' + (NAMES[p.os] || p.os) : '') + '.';\n  } catch (e) {\n    return e.message;\n  }\n}\n"
+}

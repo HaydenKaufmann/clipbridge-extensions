@@ -35,7 +35,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 KEY_ID = "cb-catalogue-1"
-BUILT_IN = {"keys_mouse", "clipboard", "history", "dongles", "store", "settings", "keyboard"}
+BUILT_IN = {"keys_mouse", "clipboard", "history", "dongles", "store", "settings", "keyboard", "chat"}
 MAX_EXTENSION_BYTES = 64 * 1024
 
 
