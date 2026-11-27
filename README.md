@@ -36,7 +36,7 @@ Scripts run in a sandbox with no network, and talk to the app only through
 `cb`: `cb.type`, `cb.keys`, `cb.wait`, `cb.mouse.*`, `cb.ducky`,
 `cb.storage.*`, and the prompts `cb.ask`, `cb.choose`, `cb.confirm` and
 `cb.notify`. Every call is checked against the extension's permissions.
-[`extensions/dev-server.json`](extensions/dev-server.json) is a worked
+[`extensions/computer-setup.json`](extensions/computer-setup.json) is a worked
 example, and the app's
 [docs/extensions.md](https://github.com/HaydenKaufmann/clipbridge/blob/main/docs/extensions.md#scripts)
 has the whole API.
@@ -62,3 +62,9 @@ app, and its sequence number isn't older than one it has already seen.
 `schema/extension.schema.json` is generated from the app (so it lists exactly
 the blocks, icons and keys the app knows). Don't edit it here: regenerate it in
 the app repository and copy it over.
+
+## Drafts
+
+`drafts/` holds extensions taken out of the Store for now (Dev Server, Call Controls,
+Media & Presenter and Shortcut Deck). The build only reads `extensions/`, so they aren't in
+the catalogue; move one back to publish it again.

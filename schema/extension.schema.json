@@ -114,7 +114,8 @@
           "mouse",
           "runDucky",
           "readClipboard",
-          "runScript"
+          "runScript",
+          "runCommands"
         ]
       }
     },
@@ -147,6 +148,47 @@
         "$ref": "#/$defs/widget"
       },
       "maxItems": 8
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A command the app can run on the computer, approved at install.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{0,31}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "run": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "The exact command, run in the computer's shell. {name} placeholders are filled (quoted) from the script's cb.run arguments."
+          },
+          "cwd": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Where it starts, e.g. ~/code/web."
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3600
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "run"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 32
     },
     "script": {
       "type": "string",
@@ -245,12 +287,77 @@
           },
           "maxItems": 4
         },
+        "tabs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "A page within the app, shown as a tab under the header. Each section names the tab it is on with \"tab\".",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,40}$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16
+              },
+              "icon": {
+                "enum": [
+                  "bolt",
+                  "clipboard",
+                  "code",
+                  "command",
+                  "copy",
+                  "download",
+                  "edit",
+                  "home",
+                  "keyboard",
+                  "library",
+                  "link",
+                  "lock",
+                  "macro",
+                  "mail",
+                  "mouse",
+                  "mute",
+                  "page",
+                  "paste",
+                  "pause",
+                  "play",
+                  "redo",
+                  "remote",
+                  "screenshot",
+                  "search",
+                  "send",
+                  "settings",
+                  "skip_next",
+                  "skip_previous",
+                  "slideshow",
+                  "star",
+                  "terminal",
+                  "text",
+                  "trackpad",
+                  "undo",
+                  "volume_down",
+                  "volume_up",
+                  "window"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 8
+        },
         "sections": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/section"
           },
-          "maxItems": 12
+          "maxItems": 32
         }
       },
       "required": [
@@ -265,6 +372,10 @@
           "type": "object",
           "properties": {
             "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,40}$"
+            },
+            "tab": {
               "type": "string",
               "pattern": "^[A-Za-z0-9_-]{1,40}$"
             },
@@ -293,6 +404,10 @@
           "type": "object",
           "properties": {
             "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,40}$"
+            },
+            "tab": {
               "type": "string",
               "pattern": "^[A-Za-z0-9_-]{1,40}$"
             },
@@ -343,6 +458,8 @@
             "library_new",
             "library_search",
             "mouse_buttons",
+            "note",
+            "output",
             "send_clipboard",
             "status_card",
             "trackpad",
@@ -364,7 +481,28 @@
           "properties": {
             "label": {
               "type": "string",
-              "maxLength": 40
+              "maxLength": 40,
+              "description": "A button's label. Fits in full: 15 characters on a 2-column button, 28 on 3, 40 on 4; 12 on a 1-column 2-row button, 30 on a 2-column 2-row one. A 1-column 1-row button shows only its icon."
+            },
+            "info": {
+              "type": "string",
+              "maxLength": 400,
+              "description": "A button's explanation, shown when it's held: what it does, when to use it."
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 60,
+              "description": "A note's heading."
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 1000,
+              "description": "A note's text."
+            },
+            "code": {
+              "type": "string",
+              "maxLength": 500,
+              "description": "A command shown in a note; tap to copy."
             },
             "icon": {
               "enum": [
